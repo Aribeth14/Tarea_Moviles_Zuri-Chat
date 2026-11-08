@@ -1,0 +1,40 @@
+<ion-content [fullscreen]="true">
+  <div class="login">
+    <div class="blob"></div>
+
+    <header class="rise">
+      <app-zuri-logo [size]="52" />
+      <h1>Hola de<br /><em>nuevo</em>.</h1>
+      <p>Entra para seguir tus conversaciones.</p>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="rise" style="animation-delay:.15s">
+      <label class="field" [class.bad]="invalid('email')">
+        <span>Correo</span>
+        <input type="email" formControlName="email" placeholder="tu@correo.com" autocomplete="email" />
+        @if (invalid('email')) { <small>Escribe un correo válido</small> }
+      </label>
+
+      <label class="field" [class.bad]="invalid('password')">
+        <span>Contraseña</span>
+        <div class="pass">
+          <input [type]="showPass() ? 'text' : 'password'" formControlName="password" placeholder="••••••••" autocomplete="current-password" />
+          <button type="button" (click)="showPass.set(!showPass())" aria-label="Mostrar u ocultar contraseña">
+            {{ showPass() ? 'Ocultar' : 'Ver' }}
+          </button>
+        </div>
+        @if (invalid('password')) { <small>Mínimo 6 caracteres</small> }
+      </label>
+
+      @if (error()) { <div class="error">{{ error() }}</div> }
+
+      <button class="cta" type="submit" [disabled]="loading()">
+        @if (loading()) { <span class="spinner"></span> Entrando… } @else { Entrar <i>→</i> }
+      </button>
+    </form>
+
+    <p class="alt rise" style="animation-delay:.3s">
+      ¿Aún no tienes cuenta? <a routerLink="/register">Crear una</a>
+    </p>
+  </div>
+</ion-content>

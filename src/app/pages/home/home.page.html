@@ -1,0 +1,7 @@
+<ion-content>
+  <div style="padding:60px 28px">
+    <h1 style="font-family:var(--font-display)">¡Estás dentro! ✦</h1>
+    <p>Sesión: {{ auth.user()?.email }}</p>
+    <button (click)="salir()">Cerrar sesión</button>
+  </div>
+</ion-content>

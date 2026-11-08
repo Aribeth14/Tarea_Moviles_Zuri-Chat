@@ -1,0 +1,38 @@
+<ion-content [fullscreen]="true">
+  <div class="reg">
+    <header class="rise">
+      <a routerLink="/login" class="back">← Volver</a>
+      <h1>Crea tu<br /><em>espacio</em>.</h1>
+      <p>Solo toma un minuto.</p>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="rise" style="animation-delay:.15s">
+      <label class="field" [class.bad]="invalid('username')">
+        <span>Nombre</span>
+        <input formControlName="username" placeholder="¿Cómo te llamamos?" />
+        @if (invalid('username')) { <small>Mínimo 3 caracteres</small> }
+      </label>
+      <label class="field" [class.bad]="invalid('email')">
+        <span>Correo</span>
+        <input type="email" formControlName="email" placeholder="tu@correo.com" />
+        @if (invalid('email')) { <small>Escribe un correo válido</small> }
+      </label>
+      <label class="field" [class.bad]="invalid('password')">
+        <span>Contraseña</span>
+        <input type="password" formControlName="password" placeholder="Mínimo 6 caracteres" />
+        @if (invalid('password')) { <small>Mínimo 6 caracteres</small> }
+      </label>
+      <label class="field" [class.bad]="form.touched && form.hasError('mismatch')">
+        <span>Confirmar contraseña</span>
+        <input type="password" formControlName="confirm" placeholder="Repítela" />
+        @if (form.touched && form.hasError('mismatch')) { <small>Las contraseñas no coinciden</small> }
+      </label>
+
+      @if (error()) { <div class="error">{{ error() }}</div> }
+
+      <button class="cta" type="submit" [disabled]="loading()">
+        @if (loading()) { <span class="spinner"></span> Creando… } @else { Crear cuenta ✦ }
+      </button>
+    </form>
+  </div>
+</ion-content>

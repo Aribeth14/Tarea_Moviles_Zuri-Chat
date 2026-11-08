@@ -35,3 +35,39 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+:root {
+  // Paleta Zuri
+  --lumi-lavender: #E9E3FF;
+  --lumi-lavender-deep: #CFC4FF;
+  --lumi-night: #14123A;
+  --lumi-night-soft: #2A2760;
+  --lumi-cream: #FBF8F4;
+  --lumi-blush: #FFE6EE;
+  --lumi-electric: #6C3CFF;
+  --lumi-text: #1C1A3B;
+  --lumi-muted: #7C7A98;
+  --lumi-danger: #E5484D;
+
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+
+  // Variables propias de Ionic: así toda la app hereda la paleta
+  --ion-font-family: var(--font-body);
+  --ion-background-color: var(--lumi-cream);
+  --ion-text-color: var(--lumi-text);
+  --ion-color-primary: #6C3CFF;
+  --ion-color-primary-rgb: 108, 60, 255;
+  --ion-color-primary-contrast: #ffffff;
+}
+
+// Ocultamos la barra de scroll para un look más limpio
+ion-content::part(scroll) { scrollbar-width: none; }
+
+// Animación reutilizable de entrada
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.rise { animation: rise .6s cubic-bezier(.2,.8,.2,1) both; }
+
