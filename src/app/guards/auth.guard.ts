@@ -1,19 +1,19 @@
-import {inject} from '@angular/core';
-import { CanActivateFn, CanDeactivateFn,Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-//Solo permite el acceso si hay sesión
-export const authGuard: CanActivateFn=async() => {
-    const auth=inject(AuthService);
-    await auth.ready;  //Espera a saber que hay una sesion guardada
-    return auth.user()? true: inject(Router).createUrlTree(['/login']);
+// Solo deja pasar si hay sesión
+export const authGuard: CanActivateFn = async () => {
+  const auth = inject(AuthService);
+  const router = inject(Router); // se pide ANTES del await
+  await auth.ready;
+  return auth.user() ? true : router.createUrlTree(['/login']);
 };
 
-//Para login/registro: si el usuario ya esta dentro - Home
-export const guestGuard: CanActivateFn=async() => {
-    const auth = inject(AuthService);
-    await auth.ready;
-    return auth.user() ? inject(Router).createUrlTree(['/home']) : true;
-
+// Para login/registro: si ya estás dentro, te manda al home
+export const guestGuard: CanActivateFn = async () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  await auth.ready;
+  return auth.user() ? router.createUrlTree(['/home']) : true;
 };
-

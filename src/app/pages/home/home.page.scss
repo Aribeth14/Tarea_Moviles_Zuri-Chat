@@ -1,0 +1,43 @@
+.home { min-height: 100%; padding: 52px 24px 40px;
+  background: linear-gradient(180deg, var(--zuri-lavender) 0%, var(--zuri-cream) 38%); }
+
+.top { display: flex; justify-content: space-between; align-items: flex-start; }
+.hello small { display: block; font-size: 12px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--zuri-muted); }
+h1 { font-family: var(--font-display); font-weight: 500; font-size: 40px; line-height: 1.05; letter-spacing: -1px; margin: 6px 0 0; color: var(--zuri-night);
+  em { color: var(--zuri-electric); } }
+
+.me-btn { background: none; border: none; padding: 0; border-radius: 50%; line-height: 0;
+  box-shadow: 0 0 0 3px #fff, 0 10px 22px -8px rgba(108,60,255,.55); transition: transform .15s;
+  &:active { transform: scale(.94); } }
+
+.search { margin: 26px 0 6px; display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px;
+  border-radius: 18px; background: rgba(255,255,255,.7); backdrop-filter: blur(8px);
+  border: 1.5px solid transparent; color: var(--zuri-muted); transition: all .2s;
+  &:focus-within { border-color: var(--zuri-electric); background: #fff; color: var(--zuri-electric); }
+  input { flex: 1; border: none; background: transparent; outline: none; font: 500 15px var(--font-body); color: var(--zuri-text); }
+  input::placeholder { color: #B6B3CC; } }
+
+.section { font: 600 12px var(--font-body); letter-spacing: 1.2px; text-transform: uppercase; color: var(--zuri-muted); margin: 26px 0 4px; }
+
+// Lista sin tarjetas: solo líneas finas (estilo editorial)
+.row { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(20,18,58,.07); }
+.info { min-width: 0; display: flex; flex-direction: column; gap: 2px;
+  strong { font-size: 16px; color: var(--zuri-night); }
+  span { font-size: 13px; color: var(--zuri-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } }
+
+// Skeleton (carga)
+.sk { background: linear-gradient(90deg, #ECE8F7 25%, #F6F3FC 50%, #ECE8F7 75%); background-size: 200% 100%; animation: shimmer 1.3s infinite; border-radius: 8px; }
+.circle { width: 54px; height: 54px; border-radius: 50%; flex-shrink: 0; }
+.lines { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.l1 { height: 14px; width: 40%; } .l2 { height: 11px; width: 70%; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+// Estados vacío / error
+.state { text-align: center; padding: 56px 20px;
+  .emoji { font-size: 44px; animation: float 3s ease-in-out infinite; }
+  h3 { font-family: var(--font-display); font-weight: 500; font-size: 24px; color: var(--zuri-night); margin: 14px 0 6px; }
+  p { color: var(--zuri-muted); font-size: 14px; margin: 0 auto; max-width: 240px; line-height: 1.5; } }
+@keyframes float { 50% { transform: translateY(-6px); } }
+.ghost { margin-top: 18px; border: 1.5px solid var(--zuri-electric); background: transparent; color: var(--zuri-electric);
+  font: 600 14px var(--font-body); padding: 11px 22px; border-radius: 16px; &:active { transform: scale(.96); } }
+  

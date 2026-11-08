@@ -1,7 +1,60 @@
-<ion-content>
-  <div style="padding:60px 28px">
-    <h1 style="font-family:var(--font-display)">¡Estás dentro! ✦</h1>
-    <p>Sesión: {{ auth.user()?.email }}</p>
-    <button (click)="salir()">Cerrar sesión</button>
+<ion-content [fullscreen]="true">
+  <div class="home">
+    <header class="top rise">
+      <div class="hello">
+        <small>{{ greeting() }}</small>
+        <h1>{{ me()?.username ?? '...' }}<em>.</em></h1>
+      </div>
+      <button class="me-btn" (click)="goProfile()" aria-label="Abrir mi perfil">
+        <app-avatar [url]="me()?.avatar_url ?? null" [name]="me()?.username ?? ''" [size]="52" />
+      </button>
+    </header>
+
+    <label class="search rise" style="animation-delay:.1s">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
+      </svg>
+      <input type="search" placeholder="Busca a alguien…" (input)="onSearch($event)" />
+    </label>
+
+    <h2 class="section rise" style="animation-delay:.2s">Personas en Zuri</h2>
+
+    @if (loading()) {
+      @for (i of [1,2,3,4]; track i) {
+        <div class="row">
+          <div class="sk circle"></div>
+          <div class="lines"><div class="sk l1"></div><div class="sk l2"></div></div>
+        </div>
+      }
+    } @else if (failed()) {
+      <div class="state">
+        <div class="emoji">🌧️</div>
+        <h3>No pudimos cargar</h3>
+        <p>Revisa tu conexión e inténtalo otra vez.</p>
+        <button class="ghost" (click)="load()">Reintentar</button>
+      </div>
+    } @else if (users().length === 0) {
+      <div class="state">
+        <div class="emoji">✨</div>
+        <h3>Aquí hay mucho silencio</h3>
+        <p>Todavía no hay nadie más en Zuri. Invita a un amigo a crear su cuenta.</p>
+      </div>
+    } @else if (filtered().length === 0) {
+      <div class="state">
+        <div class="emoji">🔍</div>
+        <h3>Nadie se llama así</h3>
+        <p>Prueba con otro nombre.</p>
+      </div>
+    } @else {
+      @for (u of filtered(); track u.id) {
+        <div class="row rise">
+          <app-avatar [url]="u.avatar_url" [name]="u.username" [size]="54" />
+          <div class="info">
+            <strong>{{ u.username }}</strong>
+            <span>{{ u.bio }}</span>
+          </div>
+        </div>
+      }
+    }
   </div>
 </ion-content>

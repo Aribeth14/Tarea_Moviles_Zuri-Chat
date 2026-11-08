@@ -38,24 +38,24 @@
 
 :root {
   // Paleta Zuri
-  --lumi-lavender: #E9E3FF;
-  --lumi-lavender-deep: #CFC4FF;
-  --lumi-night: #14123A;
-  --lumi-night-soft: #2A2760;
-  --lumi-cream: #FBF8F4;
-  --lumi-blush: #FFE6EE;
-  --lumi-electric: #6C3CFF;
-  --lumi-text: #1C1A3B;
-  --lumi-muted: #7C7A98;
-  --lumi-danger: #E5484D;
+  --zuri-lavender: #E9E3FF;
+  --zuri-lavender-deep: #CFC4FF;
+  --zuri-night: #14123A;
+  --zuri-night-soft: #2A2760;
+  --zuri-cream: #FBF8F4;
+  --zuri-blush: #FFE6EE;
+  --zuri-electric: #6C3CFF;
+  --zuri-text: #1C1A3B;
+  --zuri-muted: #7C7A98;
+  --zuri-danger: #E5484D;
 
   --font-display: 'Fraunces', serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
 
   // Variables propias de Ionic: así toda la app hereda la paleta
   --ion-font-family: var(--font-body);
-  --ion-background-color: var(--lumi-cream);
-  --ion-text-color: var(--lumi-text);
+  --ion-background-color: var(--zuri-cream);
+  --ion-text-color: var(--zuri-text);
   --ion-color-primary: #6C3CFF;
   --ion-color-primary-rgb: 108, 60, 255;
   --ion-color-primary-contrast: #ffffff;

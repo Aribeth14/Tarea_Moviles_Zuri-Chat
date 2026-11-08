@@ -1,0 +1,42 @@
+.profile { min-height: 100%; background: var(--zuri-cream); }
+
+// Cabecera oscura: da contraste con el Home claro (cada pantalla es distinta)
+.hero { position: relative; text-align: center; color: #fff; padding: 56px 24px 56px;
+  background: linear-gradient(160deg, var(--zuri-night) 0%, var(--zuri-night-soft) 100%);
+  border-radius: 0 0 44px 44px; overflow: hidden;
+  &::after { content: ''; position: absolute; width: 220px; height: 220px; border-radius: 50%; background: var(--zuri-electric); filter: blur(70px); opacity: .45; top: -80px; right: -60px; }
+  h2 { font-family: var(--font-display); font-weight: 500; font-size: 32px; margin: 18px 0 2px; letter-spacing: -.5px; position: relative; }
+  p { margin: 0; color: var(--zuri-lavender-deep); font-size: 14px; position: relative; } }
+
+.back { position: absolute; top: 48px; left: 20px; z-index: 2; width: 42px; height: 42px; border-radius: 50%; border: none;
+  background: rgba(255,255,255,.14); color: #fff; font-size: 20px; backdrop-filter: blur(6px); &:active { transform: scale(.92); } }
+
+.avatar-wrap { position: relative; display: inline-block; z-index: 1;
+  app-avatar { box-shadow: 0 0 0 4px rgba(255,255,255,.9), 0 16px 34px -10px rgba(0,0,0,.5); border-radius: 50%; } }
+.cam { position: absolute; right: -2px; bottom: 2px; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: var(--zuri-electric); color: #fff; box-shadow: 0 6px 14px -4px rgba(108,60,255,.8); border: 3px solid var(--zuri-night); transition: transform .15s; &:active { transform: scale(.9); } }
+.busy { position: absolute; inset: 0; border-radius: 50%; background: rgba(20,18,58,.6); display: flex; align-items: center; justify-content: center; }
+
+.body { display: flex; flex-direction: column; gap: 22px; padding: 34px 28px 40px; }
+
+.field { display: flex; flex-direction: column; gap: 6px; position: relative;
+  span { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--zuri-muted); }
+  input, textarea { background: transparent; border: none; border-bottom: 2px solid var(--zuri-lavender-deep); padding: 10px 0; font: 500 17px var(--font-body); color: var(--zuri-text); outline: none; resize: none; transition: border-color .25s;
+    &:focus { border-color: var(--zuri-electric); } }
+  small { color: var(--zuri-danger); font-size: 12px; }
+  em { position: absolute; right: 0; top: 0; font-style: normal; font-size: 11px; color: var(--zuri-muted); }
+  &.bad input { border-color: var(--zuri-danger); }
+  &.locked input { color: var(--zuri-muted); border-bottom-style: dashed; } }
+
+.error { background: #FFE9EA; color: var(--zuri-danger); padding: 12px 14px; border-radius: 14px; font-size: 13px; font-weight: 500; }
+.ok { background: #E8F8EF; color: #1F9254; padding: 12px 14px; border-radius: 14px; font-size: 13px; font-weight: 600; animation: rise .3s both; }
+
+.cta { border: none; border-radius: 20px; height: 56px; color: #fff; font: 600 16px var(--font-body);
+  background: linear-gradient(135deg, #8F6BFF, var(--zuri-electric)); box-shadow: 0 14px 28px -10px rgba(108,60,255,.65);
+  display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform .15s, opacity .2s;
+  &:active { transform: scale(.97); } &:disabled { opacity: .45; box-shadow: none; } }
+
+.logout { background: none; border: none; color: var(--zuri-danger); font: 600 14px var(--font-body); padding: 10px; }
+
+.spinner { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

@@ -1,0 +1,50 @@
+<ion-content [fullscreen]="true">
+  <div class="profile">
+
+    <section class="hero">
+      <button class="back" (click)="back()" aria-label="Volver">←</button>
+
+      <div class="avatar-wrap">
+        <app-avatar [url]="me()?.avatar_url ?? null" [name]="me()?.username ?? ''" [size]="116" />
+        @if (uploading()) { <div class="busy"><span class="spinner"></span></div> }
+        <label class="cam" aria-label="Cambiar foto de perfil">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" />
+          </svg>
+          <input type="file" accept="image/*" (change)="onFile($event)" hidden />
+        </label>
+      </div>
+
+      <h2>{{ me()?.username }}</h2>
+      <p>{{ me()?.email }}</p>
+    </section>
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="body">
+      <label class="field" [class.bad]="invalid('username')">
+        <span>Nombre</span>
+        <input formControlName="username" placeholder="Tu nombre" />
+        @if (invalid('username')) { <small>Mínimo 3 caracteres</small> }
+      </label>
+
+      <label class="field" [class.bad]="invalid('bio')">
+        <span>Estado</span>
+        <textarea formControlName="bio" rows="2" placeholder="¿Qué quieres que sepan de ti?"></textarea>
+        <em>{{ form.controls.bio.value.length }}/120</em>
+      </label>
+
+      <label class="field locked">
+        <span>Correo</span>
+        <input [value]="me()?.email ?? ''" disabled />
+      </label>
+
+      @if (error()) { <div class="error">{{ error() }}</div> }
+      @if (message()) { <div class="ok">{{ message() }}</div> }
+
+      <button class="cta" type="submit" [disabled]="saving() || form.pristine">
+        @if (saving()) { <span class="spinner"></span> Guardando… } @else { Guardar cambios }
+      </button>
+
+      <button class="logout" type="button" (click)="confirmLogout()">Cerrar sesión</button>
+    </form>
+  </div>
+</ion-content>
