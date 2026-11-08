@@ -1,0 +1,7 @@
+{
+  "name": "zuri-chat",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
