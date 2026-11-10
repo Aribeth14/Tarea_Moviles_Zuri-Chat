@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { IonContent } from '@ionic/angular';
 import { Profile, ProfileService } from '../../services/profile.service';
 import { AvatarComponent } from '../../components/avatar/avatar.component';
+import { ToastController} from '@ionic/angular';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +15,9 @@ import { AvatarComponent } from '../../components/avatar/avatar.component';
 export class HomePage implements OnInit {
   private profiles = inject(ProfileService);
   private router = inject(Router);
+  private chat = inject(ChatService);
+  private toasts = inject(ToastController);
+  opening = signal<string | null>(null); // id de la persona de la cual el chat se abre
 
   me = this.profiles.me;
   users = signal<Profile[]>([]);
@@ -57,5 +62,23 @@ export class HomePage implements OnInit {
   goProfile() {
     this.router.navigateByUrl('/profile');
   }
+    async open(u: Profile) {
+    if (this.opening()) return;
+    this.opening.set(u.id);
+    try {
+      const roomId = await this.chat.openDirect(u.id);
+      await this.router.navigate(['/chat', roomId]);
+    } catch {
+      const t = await this.toasts.create({
+        message: 'No pudimos abrir el chat. Inténtalo de nuevo.',
+        duration: 2500,
+        position: 'top',
+      });
+      await t.present();
+    } finally {
+      this.opening.set(null);
+    }
+  }
 }
+
 

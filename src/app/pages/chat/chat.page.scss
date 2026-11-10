@@ -1,0 +1,56 @@
+ion-content { --background: linear-gradient(180deg, #F1ECFF 0%, var(--zuri-cream) 70%); }
+
+// Cabecera translúcida con el nombre y la foto
+.bar { display: flex; align-items: center; gap: 12px;
+  padding: calc(var(--ion-safe-area-top, 0px) + 12px) 16px 12px;
+  background: rgba(251, 248, 244, .88); backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(20, 18, 58, .06); }
+.back { width: 40px; height: 40px; border-radius: 50%; border: none; flex-shrink: 0;
+  background: var(--zuri-lavender); color: var(--zuri-night); font-size: 18px; transition: transform .15s;
+  &:active { transform: scale(.9); } }
+.who { min-width: 0; display: flex; flex-direction: column;
+  strong { font-family: var(--font-display); font-weight: 500; font-size: 19px; color: var(--zuri-night); }
+  span { font-size: 12px; color: var(--zuri-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } }
+
+.thread { display: flex; flex-direction: column; gap: 10px; padding: 18px 16px 10px; min-height: 100%; }
+
+// Burbujas: esquinas asimétricas, la "cola" es la esquina pequeña
+.msg { display: flex; flex-direction: column; align-items: flex-start; max-width: 78%; animation: pop-in .25s both;
+  &.mine { align-self: flex-end; align-items: flex-end; } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
+
+.bubble { padding: 11px 15px; font-size: 15px; line-height: 1.4; word-break: break-word; white-space: pre-wrap;
+  background: #fff; color: var(--zuri-text); border-radius: 20px 20px 20px 6px;
+  box-shadow: 0 6px 16px -10px rgba(20, 18, 58, .35); }
+.mine .bubble { background: linear-gradient(135deg, #8F6BFF, var(--zuri-electric)); color: #fff;
+  border-radius: 20px 20px 6px 20px; box-shadow: 0 10px 20px -10px rgba(108, 60, 255, .7); }
+time { font-size: 10.5px; color: var(--zuri-muted); margin-top: 4px; padding: 0 4px; }
+
+// Skeleton
+.sk-msg { display: flex; &.mine { justify-content: flex-end; } }
+.sk { height: 42px; border-radius: 20px; background: linear-gradient(90deg, #ECE8F7 25%, #F6F3FC 50%, #ECE8F7 75%); background-size: 200% 100%; animation: shimmer 1.3s infinite; }
+.w1 { width: 55%; } .w2 { width: 40%; } .w3 { width: 65%; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+// Estados vacío / error
+.state { text-align: center; padding: 90px 24px; margin: auto;
+  .emoji { font-size: 46px; animation: float 3s ease-in-out infinite; }
+  h3 { font-family: var(--font-display); font-weight: 500; font-size: 24px; color: var(--zuri-night); margin: 14px 0 6px; }
+  p { color: var(--zuri-muted); font-size: 14px; margin: 0 auto; max-width: 240px; line-height: 1.5; } }
+@keyframes float { 50% { transform: translateY(-6px); } }
+.ghost { margin-top: 18px; border: 1.5px solid var(--zuri-electric); background: transparent; color: var(--zuri-electric);
+  font: 600 14px var(--font-body); padding: 11px 22px; border-radius: 16px; &:active { transform: scale(.96); } }
+
+// Campo de escritura
+ion-footer { background: var(--zuri-cream); }
+.send-error { background: #FFE9EA; color: var(--zuri-danger); font-size: 12px; font-weight: 500; text-align: center; padding: 8px; }
+.composer { display: flex; align-items: center; gap: 10px; padding: 10px 14px calc(10px + var(--ion-safe-area-bottom, 0px)); }
+.composer input { flex: 1; min-width: 0; height: 50px; border-radius: 25px; border: 1.5px solid transparent; background: #fff;
+  padding: 0 20px; font: 500 15px var(--font-body); color: var(--zuri-text); outline: none;
+  box-shadow: 0 6px 18px -10px rgba(20, 18, 58, .3); transition: border-color .2s;
+  &:focus { border-color: var(--zuri-electric); } &::placeholder { color: #B6B3CC; } }
+.send { width: 50px; height: 50px; border-radius: 50%; border: none; flex-shrink: 0; color: #fff;
+  background: linear-gradient(135deg, #8F6BFF, var(--zuri-electric)); box-shadow: 0 10px 20px -8px rgba(108, 60, 255, .7);
+  display: flex; align-items: center; justify-content: center; transition: transform .15s, opacity .2s;
+  &:active { transform: scale(.9); } &:disabled { opacity: .4; box-shadow: none; } }
+  

@@ -46,14 +46,15 @@
         <p>Prueba con otro nombre.</p>
       </div>
     } @else {
-      @for (u of filtered(); track u.id) {
-        <div class="row rise">
-          <app-avatar [url]="u.avatar_url" [name]="u.username" [size]="54" />
-          <div class="info">
-            <strong>{{ u.username }}</strong>
-            <span>{{ u.bio }}</span>
-          </div>
+        @for (u of filtered(); track u.id) {
+        <button class="row rise" (click)="open(u)" [disabled]="opening() !== null">
+        <app-avatar [url]="u.avatar_url" [name]="u.username" [size]="54" />
+        <div class="info">
+          <strong>{{ u.username }}</strong>
+          <span>{{ u.bio }}</span>
         </div>
+        <i class="go">{{ opening() === u.id ? '…' : '›' }}</i>
+        </button>
       }
     }
   </div>

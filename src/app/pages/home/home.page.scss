@@ -41,3 +41,9 @@ h1 { font-family: var(--font-display); font-weight: 500; font-size: 40px; line-h
 .ghost { margin-top: 18px; border: 1.5px solid var(--zuri-electric); background: transparent; color: var(--zuri-electric);
   font: 600 14px var(--font-body); padding: 11px 22px; border-radius: 16px; &:active { transform: scale(.96); } }
   
+// La fila ahora es un botón: quitamos el estilo
+button.row { width: 100%; background: none; border: 0; border-bottom: 1px solid rgba(20,18,58,.07);
+  text-align: left; font: inherit; color: inherit; transition: background .15s;
+  &:active { background: rgba(108,60,255,.06); } }
+.go { margin-left: auto; font-style: normal; font-size: 24px; color: var(--zuri-lavender-deep); }
+

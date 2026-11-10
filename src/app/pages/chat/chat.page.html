@@ -1,0 +1,63 @@
+<ion-header class="ion-no-border">
+  <div class="bar">
+    <button class="back" (click)="back()" aria-label="Volver">←</button>
+    <app-avatar [url]="peer()?.avatar_url ?? null" [name]="peer()?.username ?? ''" [size]="42" />
+    <div class="who">
+      <strong>{{ peer()?.username ?? '…' }}</strong>
+      <span>{{ peer()?.bio }}</span>
+    </div>
+  </div>
+</ion-header>
+
+<ion-content>
+  <div class="thread">
+    @if (loading()) {
+      <div class="sk-msg"><div class="sk w1"></div></div>
+      <div class="sk-msg mine"><div class="sk w2"></div></div>
+      <div class="sk-msg"><div class="sk w3"></div></div>
+      <div class="sk-msg mine"><div class="sk w1"></div></div>
+    } @else if (failed()) {
+      <div class="state">
+        <div class="emoji">🌧️</div>
+        <h3>No pudimos abrir el chat</h3>
+        <p>Revisa tu conexión e inténtalo otra vez.</p>
+        <button class="ghost" (click)="load()">Reintentar</button>
+      </div>
+    } @else if (messages().length === 0) {
+      <div class="state">
+        <div class="emoji">👋</div>
+        <h3>Rompe el hielo</h3>
+        <p>Escríbele el primer mensaje a {{ peer()?.username }}.</p>
+      </div>
+    } @else {
+      @for (m of messages(); track m.id) {
+        <div class="msg" [class.mine]="isMine(m)">
+          <div class="bubble">{{ m.content }}</div>
+          <time>{{ time(m.created_at) }}</time>
+        </div>
+      }
+    }
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  @if (sendError()) {
+    <div class="send-error">No se pudo enviar. Toca enviar para reintentar.</div>
+  }
+  <div class="composer">
+    <input
+      type="text"
+      placeholder="Escribe un mensaje…"
+      [value]="draft()"
+      (input)="onInput($event)"
+      (keydown.enter)="send()"
+      (focus)="scroll(400)"
+      autocomplete="off"
+    />
+    <button class="send" (click)="send()" [disabled]="!draft().trim() || sending()" aria-label="Enviar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 2 11 13" /><path d="M22 2 15 22l-4-9-9-4 20-7z" />
+      </svg>
+    </button>
+  </div>
+</ion-footer>

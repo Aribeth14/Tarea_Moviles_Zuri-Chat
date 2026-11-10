@@ -24,9 +24,16 @@ export const routes: Routes = [
   },
   {
     path: 'profile',
-    canActivate:[authGuard],
+    canActivate: [authGuard],
     loadComponent: () => import('./pages/profile/profile.page').then((m) => m.ProfilePage),
   },
-
+  {
+    path: 'chat',
+    loadComponent: () => import('./pages/chat/chat.page').then((m) => m.ChatPage),
+  },
+  {
+    path:'chat/:roomId',
+    canActivate:[authGuard],
+    loadComponent: () => import('./pages/chat/chat.page').then(m => m.ChatPage),
+  },
 ];
-
