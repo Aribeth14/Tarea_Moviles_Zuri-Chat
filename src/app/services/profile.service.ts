@@ -62,6 +62,16 @@ export class ProfileService {
     const { data } = this.sb.storage.from('avatars').getPublicUrl(path);
     await this.updateProfile({ avatar_url: data.publicUrl });
   }
+    // Sube una imagen a mi carpeta de 'avatars' y devuelve su URL pública (foto de un grupo)
+  async uploadPublicImage(image: Blob): Promise<string> {
+    const path = `${this.uid}/${Date.now()}-grupo.jpg`;
+    const { error } = await this.sb.storage
+      .from('avatars').upload(path, image, { contentType: 'image/jpeg' });
+    if (error) throw error;
+    return this.sb.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+  }
+
 }
+
 
 

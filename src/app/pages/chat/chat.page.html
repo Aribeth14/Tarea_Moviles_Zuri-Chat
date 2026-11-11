@@ -1,11 +1,14 @@
+
 <ion-header class="ion-no-border">
   <div class="bar">
     <button class="back" (click)="back()" aria-label="Volver">←</button>
-    <app-avatar [url]="peer()?.avatar_url ?? null" [name]="peer()?.username ?? ''" [size]="42" />
-    <div class="who">
-      <strong>{{ peer()?.username ?? '…' }}</strong>
-      <span>{{ peer()?.bio }}</span>
-    </div>
+    <button class="head" [class.tap]="isGroup()" (click)="isGroup() && panel.set(true)">
+      <app-avatar [url]="head().avatar" [name]="head().name" [size]="42" />
+      <span class="who">
+        <strong>{{ head().name }}</strong>
+        <span [class.live]="head().live">{{ head().sub }}</span>
+      </span>
+    </button>
   </div>
 </ion-header>
 
@@ -27,11 +30,15 @@
       <div class="state">
         <div class="emoji">👋</div>
         <h3>Rompe el hielo</h3>
-        <p>Escríbele el primer mensaje a {{ peer()?.username }}.</p>
+        <p>Escribe el primer mensaje para {{ head().name }}.</p>
       </div>
     } @else {
-      @for (m of messages(); track m.id) {
+      @for (m of messages(); track m.id; let i = $index) {
         <div class="msg" [class.mine]="isMine(m)">
+          @if (isGroup() && !isMine(m) && showName(i)) {
+            <small class="from">{{ nameOf(m.sender_id) }}</small>
+          }
+
           @switch (m.type) {
             @case ('image') {
               <button class="img-bubble" (click)="openViewer(m)" aria-label="Ver imagen">
@@ -55,7 +62,8 @@
               <a class="loc-bubble" [href]="mapsUrl(m)" target="_blank" rel="noopener">
                 <div class="map">
                   <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" stroke="#fff" stroke-width="1.5">
-                    <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" fill="#fff" stroke="none" />
+                    <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" fill="#fff" stroke="none" />
                   </svg>
                 </div>
                 <div class="info">
@@ -69,43 +77,87 @@
               <div class="bubble">{{ m.content }}</div>
             }
           }
-          <time>{{ time(m.created_at) }}</time>
+
+          <time>
+            {{ time(m.created_at) }}
+            @if (isMine(m)) {
+              <b [class.seen]="seenBy(m) > 0">{{ status(m) }}</b>
+            }
+          </time>
         </div>
       }
+    }
+
+    <!-- CAMBIO 2: Indicador de escribiendo -->
+    @if (typingText() && !loading()) {
+      <div class="msg">
+        <div class="bubble dots" aria-label="Escribiendo">
+          <i></i><i></i><i></i>
+        </div>
+      </div>
     }
   </div>
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  @if (notice()) { <div class="send-error">{{ notice() }}</div> }
-  @if (busy()) { <div class="busy"><span class="spin"></span>{{ busy() }}</div> }
+  @if (notice()) {
+    <div class="send-error">{{ notice() }}</div>
+  }
+
+  @if (busy()) {
+    <div class="busy"><span class="spin"></span>{{ busy() }}</div>
+  }
 
   @if (menuOpen()) {
     <div class="menu">
       <button class="c1" (click)="img.click(); menuOpen.set(false)">
-        <i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="9" cy="9" r="2" /><path d="m21 15-5-5L5 21" /></svg></i>
+        <i>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="3" />
+            <circle cx="9" cy="9" r="2" />
+            <path d="m21 15-5-5L5 21" />
+          </svg>
+        </i>
         Imagen
       </button>
+
       <button class="c2" (click)="doc.click(); menuOpen.set(false)">
-        <i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /></svg></i>
+        <i>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <path d="M14 2v6h6" />
+          </svg>
+        </i>
         Archivo
       </button>
+
       <button class="c3" (click)="shareLocation()">
-        <i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg></i>
+        <i>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+        </i>
         Ubicación
       </button>
     </div>
   }
 
-  <!-- Selectores de archivo ocultos: los abren los botones del menú -->
   <input #img type="file" accept="image/*" hidden (change)="onImage($event)" />
   <input #doc type="file" hidden (change)="onFile($event)" />
 
   <div class="composer">
-    <button class="plus" [class.open]="menuOpen()" (click)="menuOpen.set(!menuOpen())"
-            [disabled]="busy() !== null" aria-label="Adjuntar">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
+    <button
+      class="plus"
+      [class.open]="menuOpen()"
+      (click)="menuOpen.set(!menuOpen())"
+      [disabled]="busy() !== null"
+      aria-label="Adjuntar">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+        <path d="M12 5v14M5 12h14" />
+      </svg>
     </button>
+
     <input
       type="text"
       placeholder="Escribe un mensaje…"
@@ -115,9 +167,15 @@
       (focus)="scroll(400)"
       autocomplete="off"
     />
-    <button class="send" (click)="send()" [disabled]="!draft().trim() || sending()" aria-label="Enviar">
+
+    <button
+      class="send"
+      (click)="send()"
+      [disabled]="!draft().trim() || sending()"
+      aria-label="Enviar">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 2 11 13" /><path d="M22 2 15 22l-4-9-9-4 20-7z" />
+        <path d="M22 2 11 13" />
+        <path d="M22 2 15 22l-4-9-9-4 20-7z" />
       </svg>
     </button>
   </div>
@@ -127,5 +185,34 @@
   <div class="viewer" (click)="viewer.set(null)">
     <img [src]="viewer()" alt="Imagen ampliada" />
     <button aria-label="Cerrar">✕</button>
+  </div>
+}
+
+@if (panel()) {
+  <div class="sheet-bg" (click)="panel.set(false)">
+    <div class="sheet" (click)="$event.stopPropagation()">
+      <i class="grip"></i>
+
+      <div class="g-head">
+        <app-avatar [url]="head().avatar" [name]="head().name" [size]="72" />
+        <h3>{{ head().name }}</h3>
+        <p>{{ head().sub }}</p>
+      </div>
+
+      <h4>Integrantes</h4>
+
+      @for (m of members(); track m.user_id) {
+        <div class="mem">
+          <app-avatar [url]="m.profiles.avatar_url" [name]="m.profiles.username" [size]="44" />
+          <div>
+            <strong>{{ m.profiles.username }}</strong>
+            <span>{{ m.profiles.bio }}</span>
+          </div>
+          @if (m.user_id === myId) {
+            <em>Tú</em>
+          }
+        </div>
+      }
+    </div>
   </div>
 }

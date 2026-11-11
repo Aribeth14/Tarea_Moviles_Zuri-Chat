@@ -1,0 +1,68 @@
+<ion-content [fullscreen]="true">
+  <div class="ng">
+    <header class="rise">
+      <button class="back" (click)="back()" aria-label="Volver">←</button>
+      <h1>Nuevo<br /><em>grupo</em>.</h1>
+    </header>
+
+    <div class="top-row rise" style="animation-delay:.1s">
+      <label class="photo" aria-label="Elegir foto del grupo">
+        @if (preview()) {
+          <img [src]="preview()" alt="Foto del grupo" />
+        } @else {
+          <span><b>+</b><small>Foto</small></span>
+        }
+        <input type="file" accept="image/*" hidden (change)="onPhoto($event)" />
+      </label>
+
+      <label class="field">
+        <span>Nombre del grupo</span>
+        <input [value]="name()" (input)="onName($event)" maxlength="40" placeholder="Ej. Proyecto final" />
+      </label>
+    </div>
+
+    <h2 class="section rise" style="animation-delay:.2s">Integrantes <b>{{ selected().size }}</b></h2>
+
+    @if (loading()) {
+      @for (i of [1,2,3]; track i) {
+        <div class="row">
+          <div class="sk circle"></div>
+          <div class="lines"><div class="sk l1"></div><div class="sk l2"></div></div>
+        </div>
+      }
+    } @else if (failed()) {
+      <div class="state">
+        <div class="emoji">🌧️</div>
+        <h3>No pudimos cargar</h3>
+        <p>Revisa tu conexión e inténtalo otra vez.</p>
+        <button class="ghost" (click)="load()">Reintentar</button>
+      </div>
+    } @else if (users().length < 2) {
+      <div class="state">
+        <div class="emoji">🌱</div>
+        <h3>Faltan personas</h3>
+        <p>Para armar un grupo necesitas al menos 2 personas más en Zuri.</p>
+      </div>
+    } @else {
+      @for (u of users(); track u.id) {
+        <button class="row" [class.on]="selected().has(u.id)" (click)="toggle(u.id)">
+          <app-avatar [url]="u.avatar_url" [name]="u.username" [size]="48" />
+          <span class="info">
+            <strong>{{ u.username }}</strong>
+            <span>{{ u.bio }}</span>
+          </span>
+          <i class="check">{{ selected().has(u.id) ? '✓' : '' }}</i>
+        </button>
+      }
+    }
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  @if (error()) { <div class="send-error">{{ error() }}</div> }
+  <div class="foot">
+    <button class="cta" (click)="create()" [disabled]="!canCreate()">
+      @if (creating()) { <span class="spinner"></span><span>Creando…</span> } @else { <span>{{ hint() }}</span> }
+    </button>
+  </div>
+</ion-footer>
