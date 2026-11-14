@@ -32,12 +32,13 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/chat/chat.page').then((m) => m.ChatPage),
   },
   {
-    path: 'chat/:roomId',
-    canActivate: [authGuard],
-    loadComponent: () => import('./pages/chat/chat.page').then((m) => m.ChatPage),
+    path:'chat/:roomId',
+    canActivate:[authGuard],
+    loadComponent: () => import('./pages/chat/chat.page').then(m => m.ChatPage),
   },
   {
     path: 'new-group',
-    loadComponent: () => import('./pages/new-group/new-group.page').then((m) => m.NewGroupPage),
-  },
+    canActivate:[authGuard],
+    loadComponent: () => import('./pages/new-group/new-group.page').then(m => m.NewGroupPage),
+  }
 ];

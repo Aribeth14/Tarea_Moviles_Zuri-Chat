@@ -1,6 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit, computed, inject, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonContent, IonFooter, IonHeader } from '@ionic/angular';
+import { AlertController, IonContent, IonFooter, IonHeader } from '@ionic/angular';
 import { Geolocation } from '@capacitor/geolocation';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { AuthService } from '../../services/auth.service';
@@ -20,6 +20,7 @@ export class ChatPage implements OnInit, OnDestroy {
   private chat = inject(ChatService);
   private auth = inject(AuthService);
   private presence = inject(PresenceService);
+  private alerts = inject(AlertController);
 
   content = viewChild(IonContent);
 
@@ -41,8 +42,8 @@ export class ChatPage implements OnInit, OnDestroy {
   urls = signal<Record<string, string>>({});
   viewer = signal<string | null>(null);
 
-  typers = signal<string[]>([]);   // quiénes escriben ahora (Firebase)
-  peerOnline = signal(false);      // la otra persona está en línea (Firebase)
+  typers = signal<string[]>([]);   // quiénes escriben
+  peerOnline = signal(false);      // la otra persona está en línea 
 
   isGroup = computed(() => this.room()?.is_group ?? false);
 
@@ -85,7 +86,8 @@ export class ChatPage implements OnInit, OnDestroy {
     this.channel = this.chat.subscribe(
       this.roomId,
       m => this.add(m),
-      (userId, at) => this.setRead(userId, at)
+      (userId, at) => this.setRead(userId, at),
+      m => this.edit(m)
     );
     this.unwatchTyping = this.presence.watchTyping(this.roomId, this.myId, ids => {
       const wasEmpty = this.typers().length === 0;
@@ -127,7 +129,7 @@ export class ChatPage implements OnInit, OnDestroy {
     }
   }
 
-  // ---- Firebase: en línea y escribiendo ----
+  // Firebase: en línea y escribiendo 
   private watchPeer() {
     if (this.unwatchPresence || this.isGroup()) return;
     const peer = this.members().find(m => m.user_id !== this.myId);
@@ -192,13 +194,18 @@ export class ChatPage implements OnInit, OnDestroy {
     return i === 0 || list[i - 1].sender_id !== list[i].sender_id;
   }
 
-  // Mensajes 
+  // Mensajes
   private add(m: Message) {
     if (this.messages().some(x => x.id === m.id)) return;
     this.messages.update(list => [...list, m]);
     this.resolve(m);
     this.scroll();
     if (!this.isMine(m)) this.markRead();
+  }
+
+  // Reemplaza un mensaje que cambió 
+  private edit(m: Message) {
+    this.messages.update(list => list.map(x => (x.id === m.id ? m : x)));
   }
 
   private async resolve(m: Message) {
@@ -226,7 +233,29 @@ export class ChatPage implements OnInit, OnDestroy {
     }
   }
 
-  // Adjuntos 
+  // Eliminar mensajes propios 
+  async confirmDelete(m: Message) {
+    const alert = await this.alerts.create({
+      header: '¿Eliminar mensaje?',
+      message: 'Se eliminará para todos en este chat.',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Eliminar', role: 'destructive', handler: () => this.remove(m) },
+      ],
+    });
+    await alert.present();
+  }
+
+  private async remove(m: Message) {
+    try {
+      await this.chat.deleteMessage(m.id);
+      this.edit({ ...m, type: 'text', content: null, file_path: null, deleted_at: new Date().toISOString() });
+    } catch {
+      this.flash('No se pudo eliminar el mensaje.');
+    }
+  }
+
+  // Adjuntos
   private async run(label: string, job: () => Promise<Message>) {
     if (this.busy()) return;
     this.busy.set(label);
@@ -296,7 +325,7 @@ export class ChatPage implements OnInit, OnDestroy {
     if (url) this.viewer.set(url);
   }
 
-  // Utilidades de la vista
+  //Utilidades de la vista
   onInput(ev: Event) {
     const value = (ev.target as HTMLInputElement).value;
     this.draft.set(value);

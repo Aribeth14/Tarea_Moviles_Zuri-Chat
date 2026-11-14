@@ -19,6 +19,7 @@ export interface Message {
   mime_type: string | null;
   lat: number | null;
   lng: number | null;
+  deleted_at:string | null;
 }
 
 export interface Room {
@@ -159,12 +160,20 @@ export class ChatService {
     return data.signedUrl;
   }
 
+    async deleteMessage(id: string) {
+    const { error } = await this.sb.rpc('delete_message', { m: id });
+    if (error) throw error;
+  }
+
+  
+
   // Tiempo real 
   // Dentro de un chat: mensajes nuevos y cambios de "leído" de los integrantes
   subscribe(
     roomId: string,
     onMessage: (m: Message) => void,
-    onRead: (userId: string, lastReadAt: string | null) => void
+    onRead: (userId: string, lastReadAt: string | null) => void,
+    onEdit? :(m:Message) => void
   ): RealtimeChannel {
     return this.sb
       .channel(`room:${roomId}`)
@@ -181,6 +190,11 @@ export class ChatService {
           onRead(row.user_id, row.last_read_at);
         }
       )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'messages', filter: `room_id=eq.${roomId}` },
+        p => onEdit?.(p.new as Message)
+      )
       .subscribe();
   }
 
@@ -195,6 +209,8 @@ export class ChatService {
       .on('postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'room_members', filter: `user_id=eq.${myId}` },
         () => onChange())
+      .on('postgres_changes', 
+        { event: 'UPDATE', schema: 'public', table: 'messages' }, () => onChange())  
       .subscribe();
   }
 

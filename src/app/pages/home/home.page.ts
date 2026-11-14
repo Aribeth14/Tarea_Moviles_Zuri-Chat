@@ -110,6 +110,7 @@ export class HomePage implements OnInit, OnDestroy {
   // Texto del último mensaje, según su tipo
   preview(c: Conversation): string {
     if (!c.last_type) return 'Sin mensajes todavía';
+    if (c.last_type === 'text' && !c.last_content) return '🚫 Mensaje eliminado';
     const body =
       c.last_type === 'image' ? '📷 Imagen'
       : c.last_type === 'file' ? `📎 ${c.last_file_name ?? 'Archivo'}`
