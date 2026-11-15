@@ -25,11 +25,11 @@ Aplicación de mensajería instantánea hecha con **Ionic, Angular y Capacitor**
 
 | Imagen y ubicación | Nuevo grupo | Chat de grupo |
 |---|---|---|
-| ![Imagen y ubicación](docs/capturas/07-imagen-ubicacion.jpeg) | ![Nuevo grupo](docs/capturas/08-nuevo-grupo.jpeg) | ![Grupo](docs/capturas/09-grupo.jpg) |
+| ![Imagen y ubicación](docs/capturas/07-imagen-ubicacion.jpeg) | ![Nuevo grupo](docs/capturas/08-nuevo-grupo.jpeg) | ![Grupo](docs/capturas/09-grupo.jpeg) |
 
 | Escribiendo / En línea | Perfil | En los teléfonos |
 |---|---|---|
-| ![Escribiendo](docs/capturas/10-escribiendo.jpg) | ![Perfil](docs/capturas/11-perfil.jpg) | ![Teléfonos](docs/capturas/16-apk-telefonos.jpg) |
+| ![Escribiendo](docs/capturas/10-escribiendo.jpg) | ![Perfil](docs/capturas/11-perfil.jpeg) | ![Teléfonos](docs/capturas/16-apk-telefonos.jpg) |
 
 ### Evidencias de Supabase
 
