@@ -141,20 +141,6 @@ La web está en **Netlify Drop**: https://zuri-chat.netlify.app
 
 Se compila en local con `ionic build` y se arrastra la carpeta `www` a Netlify. Se añade un archivo `www/_redirects` con `/*  /index.html  200` para que las rutas funcionen al recargar. La carpeta `www` no se sube a GitHub porque contiene las claves compiladas.
 
-## Pruebas
-
-La comunicación se probó con **dos teléfonos Android** con el APK instalado y dos cuentas distintas, y los grupos con una tercera cuenta. Para cada función se envió desde un dispositivo y se comprobó en el otro. La persistencia se comprobó cerrando y reabriendo la app. Las evidencias están en [`docs/capturas`](docs/capturas).
-
-| Prueba | Resultado |
-|---|---|
-| Registro de dos usuarios | [ ] |
-| Mensajes en tiempo real entre dispositivos | [ ] |
-| Mensajes persistentes al reabrir la app | [ ] |
-| Imagen, archivo y ubicación | [ ] |
-| Grupo con tres cuentas | [ ] |
-| "Visto", "escribiendo…" y "En línea" | [ ] |
-| Eliminar mensaje, búsqueda de conversaciones | [ ] |
-| Web desplegada | [ ] |
 
 ## Autora
 
